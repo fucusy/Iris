@@ -1,0 +1,8 @@
+E6998
+Hang Qian hq2124
+
+# Abstract #
+
+In this project, we implemented a search engine(api) of Chinese wikipedia pages. Using the zh.wikipedia.org dumped xml file of October 2012, we provide a set of api and command line interface to generate relevant pages based on the input query.
+
+To evaluate our program, we test it on a datasef of over 1 million pages. We test it with several common/uncommon query and gets the satifying results though there's more work to do on effiency and accuracy. Part of the results are in results.txt.
