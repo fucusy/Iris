@@ -1,11 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# Query
+#
+# query module handle the work aroung queries
+# it includs search a word/title/doc, rank the result, remove irrelevant pages
+
 import re
+import math
+
+import jieba
 
 from . import stopwords
 from .db import *
-import jieba
 
+#--------- Special Wikipedia pages pattern -----------
 wiki_pattern = "^Wikipedia:.+"
 wikitalk_pattern = "^Wikipedia talk:.+"
 talk_pattern = "^Talk:.+"
@@ -21,6 +30,7 @@ hre = re.compile(help_pattern)
 ure = re.compile(user_pattern)
 utre = re.compile(usertalk_pattern)
 tempre = re.compile(template_pattern)
+#-----------------------------------------------------
 
 def handle_query(query):
     "Input: a query. Output: (id,title) list"
@@ -28,18 +38,22 @@ def handle_query(query):
         result = {}
         con = None
         con = db_open()
-        query_seg = jieba.cut(query,cut_all=True)
+        # Split the chinese query into words/phrases
+        query_seg = jieba.cut(query,cut_all=False)
+        # eliminate the stopwords and single charactor word
         querys = [w for w in query_seg if w not in stopwords and len(w) > 1]
         for q in querys:
             l = db_query(con,q)
             result[q] = l
-        return result
+        # return the rank of the results
+        return rank(result)
     except db.Error,e:
         raise
     finally:
         db_close(con)
 
 def search_title(query):
+    "Search if query is somepage's title"
     try:
         con = None
         con = db_open()
@@ -56,32 +70,47 @@ def rank(result):
     """
     con = db_open()
     docs = {}
+    total_doc_numbers = db_get_doc_number(con)
 
     for w in result: #for every word
         total_freq = 0.0
+        df = len(result[w])
+        print "Word:",w,"Document length:",df
         for t in result[w]:
-            total_freq += t[1] 
+            #t:(id,freq) of word w
+            total_freq += t[1] # calculate the total_freq
             if t not in docs:
                 docs[t] = {}
                 docs[t]["id"] = t[0]
-                docs[t]["title"] = get_title(con,t[0])
+                docs[t]["title"] = db_search_title(con,t[0])
                 docs[t]["freq"] = 0.0
                 docs[t]["count"] = 0
     
         for t in result[w]:
-            docs[t]["freq"] += float(t[1]*len(w))/total_freq
+            # the final freq will the sum of uniformed tf-idf of each term/word
+            docs[t]["freq"] += float(t[1]*len(w))/total_freq * math.log(float(total_doc_numbers)/df,2)
             docs[t]["count"] += 1
-    
-        l = [docs[d] for d in docs if is_useful(docs[d]["title"])]
-        db_close(con)
-        l.sort(key=lambda x: rank_score(x), reverse=True)
-        return l
+
+    # then we eliminate the un-helping pages
+    l = [docs[d] for d in docs if is_useful(docs[d]["title"])]
+    db_close(con)
+    # we sort the result using rank_score() function
+    l.sort(key=lambda x: rank_score(x), reverse=True)
+    return l
 
 
 def rank_score(x):
-    return x["freq"]*x["count"]
+    """
+    Caclute the score of each doc.
+    For a more relevant doc, intuitively we need it to cover
+    more words in query. Thus furthur than just sum the frequency, 
+    we multiply it by the the square of the number that words it contains.
+    It turns out good result.
+    """
+    return x["freq"]*(x["count"]**2)
 
 def is_useful(t):
+    """To check if a page is a useful one"""
     if wre.match(t)  or \
        wtre.match(t) or \
        tre.match(t)  or \
@@ -92,10 +121,6 @@ def is_useful(t):
         return False
     return True
 
-# query = "最好的文本编辑器"
-# l = rank(handle_query(query))
-# for i in l[0:10]:
-#     print i["title"],i["freq"],i["count"]
        
 
              

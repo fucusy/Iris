@@ -1,18 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
-import re
 
-print "--- Preprocessingi and building ---"
+# Search
+#
+# In this cripte we provide a command line interface
+# User input a query and expected result number, the program will
+# return a list of result pages based on the relevance.
+
+import sys
+
+print "--- Preprocessing and building ---"
 from iris.query import *
 print "-----------------------------------"
 
 
 def search(query,n=10):
+    "Search: the main api"
+    # If the query itself is the page title, we return it first
     title_result = search_title(query)
     if title_result:
         print 0,title_result[1]
-    result = rank(handle_query(query))
+    # calling query.handle_query to deal with the words
+    result = handle_query(query)
     if not result:
         print "Nothing..."
         return
@@ -21,6 +30,8 @@ def search(query,n=10):
         n = len(result)
 
     for i,item in enumerate(result[0:n]):
+        # We print title here
+        # One can print freq(score) and count also
         print i+1,item["title"]
     
 
