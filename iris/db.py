@@ -10,8 +10,11 @@ import sys
 # We are using mysql as our database server program
 import MySQLdb as db
 
+username = 'root'
+password = ''
 
-def db_open(ip='127.0.0.1',user='root',passwd='bankisme',database='wiki'):
+
+def db_open(ip='127.0.0.1',user=username,passwd=password,database='wiki'):
     "Connect a database then return the connection object"
     con = None
     try:
@@ -46,7 +49,7 @@ def db_search(con,title):
 def db_get_doc_number(con,test=False):
     "return current number of docs"
     if test:
-        return 807000
+        return 100000
     else:
         search_query = "SELECT COUNT(*) FROM docs"
         cur = con.cursor()
