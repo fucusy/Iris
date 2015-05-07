@@ -1,9 +1,9 @@
 #Iris
 Iris is Chinese Wikipedia pages search engine. 
 
-% E6998 Search Engine Technology Final Project 
-% Hang Qian hq2124@columbia.edu
-% Nov 30,2012
+* E6998 Search Engine Technology Final Project 
+* Hang Qian hq2124@columbia.edu
+* Nov 30,2012
 
 # Abstract #
 In this project, we implemented a search engine(api) of Chinese wikipedia pages. Using the zh.wikipedia.org dumped xml file of October 2012, we provide a set of api and command line interface to generate relevant pages based on the input query.
@@ -66,16 +66,16 @@ For instance, by query "诺贝尔和平奖 中国人"(Nobel Peace Prize, Chinese
 
 index title
 ----- -----
-1     刘晓波(+++)
-2     2010年诺贝尔和平奖(++)
-3     中華人民共和國新聞自由(+)
-4     2009年诺贝尔和平奖(++)
-5     贝拉克·奥巴马(++)
-6     红十字国际委员会(+)
-7     翁山蘇姬(++)
-8     無國界醫生(+)
-9     艾默理大學(-)
-10    西奥多·罗斯福(+)
+1. 刘晓波(+++)
+2. 2010年诺贝尔和平奖(++)
+3. 中華人民共和國新聞自由(+)
+4. 2009年诺贝尔和平奖(++)
+5. 贝拉克·奥巴马(++)
+6. 红十字国际委员会(+)
+7. 翁山蘇姬(++)
+8. 無國界醫生(+)
+9. 艾默理大學(-)
+10. 西奥多·罗斯福(+)
 ----- ------
 
 We see that with mark (+)is actually relevant to the search query. And the top one is exactly what we want.
@@ -84,16 +84,16 @@ By query "自由软件基金会，Emacs作者"(Free Software Foundation, The aut
 
 index title
 ----- -----
-1     理查德·斯托曼(Richard Stallman)(+++)
-2     Emacs(++)
-3     自由软件基金会(FSF)(++)
-4     Python(-)
-5     GNU通用公共许可证(GPL)(+)
-6     GNU通用公共许可证(GPL)(+)
-7     GNU宽通用公共许可证(LGPL)(+)
-8     Copyleft(+)
-9     Linux历史(Linux History)(+)
-10    LISP(+)
+1. 理查德·斯托曼(Richard Stallman)(+++)
+2. Emacs(++)
+3. 自由软件基金会(FSF)(++)
+4. Python(-)
+5. GNU通用公共许可证(GPL)(+)
+6. GNU通用公共许可证(GPL)(+)
+7. GNU宽通用公共许可证(LGPL)(+)
+8. Copyleft(+)
+9. Linux历史(Linux History)(+)
+10. LISP(+)
 ----- -----
 
 We can see that this result is nearly perfectly close to  what we want.
@@ -108,5 +108,5 @@ There are at least two aspects that our system can be improved.
 
 Several demo output can be found at result.txt.
 
-[1]:https://github.com/fxsjy/jieba
-[2]:http://zh.wikipedia.org/wiki/Wikipedia:%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD
+\[1\]:https://github.com/fxsjy/jieba
+\[2\]:http://zh.wikipedia.org/wiki/Wikipedia:%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD
